@@ -1,5 +1,7 @@
 <?php
 
+$ControllerClass = null;
+
 foreach (glob('util/*.php') as $util_file) {
     require_once($util_file);
 }
