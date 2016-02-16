@@ -28,5 +28,32 @@ class Db {
         , E_USER_ERROR);
     }
 
+	public static function sqlLiteral($val) {
+		if (is_string($val)) {
+			$db = Db::conn();
+			$val = mysqli_real_escape_string($db, $val);
+			return "'$val'";
+		}
+		elseif ($val === NULL) { return "NULL"; }
+		elseif ($val === true) { return 1; }
+		elseif ($val === false) { return 0; }
+		else { return $val; }
+	}
+
+	public static function sqlFieldsAndValsFromArray($vars) {
+		$keys = array_keys($vars);
+		$varNameList = implode(', ', $keys);
+
+		$varValLiterals = array();
+		foreach ($keys as $key) {
+			$val = $vars[$key];
+			$varValLiterals[] = Db::sqlLiteral($val);
+		}
+
+		$varValList = implode(', ', $varValLiterals);
+		return array($varNameList, $varValList);
+	}
+
+
 }
 

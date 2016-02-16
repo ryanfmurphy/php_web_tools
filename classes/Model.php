@@ -22,7 +22,7 @@ class Model {
 		$table_name = ClassName2table_name($ClassName);
 		$obj = new $ClassName($vars);
 
-		list($varNameList, $varValList) = Model::sqlFieldsAndValsFromArray(get_object_vars($obj));
+		list($varNameList, $varValList) = Db::sqlFieldsAndValsFromArray(get_object_vars($obj));
 
 		$sql = "
 			insert into $table_name ($varNameList)
@@ -64,7 +64,7 @@ class Model {
                 $whereOrAnd = 'and';
             } */
             foreach ($vars as $key => $val) {
-                $val = self::sqlLiteral($val);
+                $val = Db::sqlLiteral($val);
                 $sql .= "\n$whereOrAnd $key = $val";
                 $whereOrAnd = 'and';
             }
@@ -101,32 +101,6 @@ class Model {
         $ClassName = get_called_class();
         return ClassName2table_name($ClassName);
     }
-
-	private static function sqlLiteral($val) {
-		if (is_string($val)) {
-			$db = Db::conn();
-			$val = mysqli_real_escape_string($db, $val);
-			return "'$val'";
-		}
-		elseif ($val === NULL) { return "NULL"; }
-		elseif ($val === true) { return 1; }
-		elseif ($val === false) { return 0; }
-		else { return $val; }
-	}
-
-	private static function sqlFieldsAndValsFromArray($vars) {
-		$keys = array_keys($vars);
-		$varNameList = implode(', ', $keys);
-
-		$varValLiterals = array();
-		foreach ($keys as $key) {
-			$val = $vars[$key];
-			$varValLiterals[] = Model::sqlLiteral($val);
-		}
-
-		$varValList = implode(', ', $varValLiterals);
-		return array($varNameList, $varValList);
-	}
 
 	private static function mysqli_fetch_all($result) {
         $ClassName = get_called_class();
