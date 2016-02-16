@@ -2,7 +2,7 @@
 
 class Model {
 
-	function __construct($vars) {
+	function __construct($vars=array()) {
         $this->updateFields($vars);
 	}
 
@@ -22,8 +22,7 @@ class Model {
 		$table_name = ClassName2table_name($ClassName);
 		$obj = new $ClassName($vars);
 
-		list($varNameList, $varValList) =
-			Model::sqlFieldsAndValsFromArray($vars);
+		list($varNameList, $varValList) = Model::sqlFieldsAndValsFromArray(get_object_vars($obj));
 
 		$sql = "
 			insert into $table_name ($varNameList)
@@ -32,28 +31,78 @@ class Model {
 		$result = mysqli_query($db, $sql);
 
 		if ($result) {
-			#todo return object
-			return $result;
+            $obj->setId(mysqli_insert_id($db)); #todo fill in default fields too?
+			return $obj;
 		}
 		else {
-			trigger_error("Model::create could not create object", E_USER_ERROR);
+            Db::error("Model::create could not create object.", $sql);
 		}
 	}
 
-	public static function get($where=NULL) {
-		$table_name = "company"; #todo
-		$sql = "
-			select * from $table_name
-		";
-		if ($where) {
-			$sql .= "where $where";
-		}
-		$sql .= ";";
+	public static function get($vars=array()) {
+        $idField = self::getIdFieldName();
+
+        { # syntactic sugar
+            /*if (is_string($vars)) {
+                $vars = array( 'where' => $vars );
+            }*/
+            if (is_int($vars)) {
+                $vars = array( $idField => $vars );
+            }
+        }
+
+        { # build sql
+            $table_name = self::table_name();
+            $sql = "
+                select * from $table_name
+            ";
+
+            # add where clauses
+            $whereOrAnd = 'where';
+            /* if (isset($vars['where'])) {
+                $sql .= "\n$whereOrAnd $vars[where]";
+                $whereOrAnd = 'and';
+            } */
+            foreach ($vars as $key => $val) {
+                $val = self::sqlLiteral($val);
+                $sql .= "\n$whereOrAnd $key = $val";
+                $whereOrAnd = 'and';
+            }
+
+            $sql .= ";";
+        }
 
 		return Model::query_fetch($sql);
 	}
 
 
+
+    public function insertAsNew() {
+    }
+
+
+    private function setId($val) {
+        $ClassName = get_called_class();
+        $idField = $ClassName::getIdFieldName();
+        $this->{$idField} = $val;
+    }
+
+    private static function getIdFieldName() {
+        return 'id';
+
+        #return self::table_name() . '_id';
+
+        /* #todo still need get_called_class??
+        $ClassName = get_called_class();
+        $table_name = ClassName2table_name($ClassName);
+        return $table_name.'_id';
+        */
+    }
+
+    private static function table_name() {
+        $ClassName = get_called_class();
+        return ClassName2table_name($ClassName);
+    }
 
 	private static function sqlLiteral($val) {
 		if (is_string($val)) {
@@ -82,8 +131,9 @@ class Model {
 	}
 
 	private static function mysqli_fetch_all($result) {
+        $ClassName = get_called_class();
 		$rows = array();
-		while ($row = mysqli_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_object($result, $ClassName)) {
 			$rows[] = $row;
 		}
 		return $rows;

@@ -2,16 +2,21 @@
 class MyController extends Controller {
 
     public static function action_get_companies() {
-        $companies = Company::get( requestVars() );
-        return json_encode($companies);
+        return json_encode(
+            Company::get( requestVars() )
+        );
     }
 
     public static function action_create_company() {
-        return Company::create( requestVars() );
+        return json_encode(
+            Company::create( requestVars() )
+        );
     }
 
     public static function action_update_company() {
-        return Company::update( requestVars() );
+        return json_encode(
+            Company::update( requestVars() )
+        );
     }
 
 }

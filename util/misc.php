@@ -29,5 +29,13 @@ class Db {
         }
     }
 
+    public static function error($msg, $sql) {
+        $db = Db::conn();
+        trigger_error($msg
+                     ." SQL error = ".mysqli_error($db)
+                     ." for query '$sql'"
+        , E_USER_ERROR);
+    }
+
 }
 
