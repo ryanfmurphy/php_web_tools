@@ -1,4 +1,5 @@
 <?php
+include('or-config.php');
 
 $ControllerClass = null;
 

@@ -1,5 +1,4 @@
 <?php
-define('URI_PREFIX', '/api');
 class Controller {
 
 	# look at url and determine route
@@ -33,11 +32,7 @@ class Controller {
 
 	# use WP config to connect to db #todo generalize
 	public static function connect_db() {
-		#todo make this general, maybe include some "config" file
-
-		# get settings, e.g. db credentials, from WP config
-		require_once('or-config.php');
-
+		#require_once('or-config.php');
 		$db = $GLOBALS['db'] = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 		return $db;
 	}

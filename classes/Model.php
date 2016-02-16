@@ -42,7 +42,7 @@ class Model {
 
 		# populate object
 		$class = get_called_class();
-		$table_name = table_name2ClassName($class); #todo fill out snake_case fn
+		$table_name = ClassName2table_name($class);
 		$obj = new $class($vars);
 
 		list($varNameList, $varValList) =
