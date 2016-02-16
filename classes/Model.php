@@ -88,9 +88,7 @@ class Model {
     }
 
     private static function getIdFieldName() {
-        return 'id';
-
-        #return self::table_name() . '_id';
+        return self::table_name() . '_id';
 
         /* #todo still need get_called_class??
         $ClassName = get_called_class();
