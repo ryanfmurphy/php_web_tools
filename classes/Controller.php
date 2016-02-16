@@ -1,5 +1,5 @@
 <?php
-define('URI_PREFIX', '/ormrouter');
+define('URI_PREFIX', '/api');
 class Controller {
 
 	# look at url and determine route

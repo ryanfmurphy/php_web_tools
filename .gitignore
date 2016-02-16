@@ -1,1 +1,5 @@
 or-config.php
+.htaccess
+controllers/*
+models/*
+controllers/MyController.php
