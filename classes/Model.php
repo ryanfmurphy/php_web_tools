@@ -3,36 +3,14 @@
 class Model {
 
 	function __construct($vars) {
+        self::updateFields($vars);
+	}
+
+    public static function updateFields($vars) {
 		foreach ($vars as $key => $val) {
 			$this->{$key} = $val;
 		}
-	}
-
-	private static function sqlLiteral($val) {
-		if (is_string($val)) {
-			$db = $GLOBALS['db'];
-			$val = mysqli_real_escape_string($db, $val);
-			return "'$val'";
-		}
-		elseif ($val === NULL) { return "NULL"; }
-		elseif ($val === true) { return 1; }
-		elseif ($val === false) { return 0; }
-		else { return $val; }
-	}
-
-	private static function sqlFieldsAndValsFromArray($vars) {
-		$keys = array_keys($vars);
-		$varNameList = implode(', ', $keys);
-
-		$varValLiterals = array();
-		foreach ($keys as $key) {
-			$val = $vars[$key];
-			$varValLiterals[] = Model::sqlLiteral($val);
-		}
-
-		$varValList = implode(', ', $varValLiterals);
-		return array($varNameList, $varValList);
-	}
+    }
 
 	public static function create($vars) {
 		if (!count($vars)) trigger_error("Model::create needs at least one key-value pair", E_USER_ERROR);
@@ -41,14 +19,13 @@ class Model {
 		if (!$db) trigger_error('problem connecting to database', E_USER_ERROR);
 
 		# populate object
-		$class = get_called_class();
-		$table_name = ClassName2table_name($class);
-		$obj = new $class($vars);
+		$ClassName = get_called_class();
+		$table_name = ClassName2table_name($ClassName);
+		$obj = new $ClassName($vars);
 
 		list($varNameList, $varValList) =
 			Model::sqlFieldsAndValsFromArray($vars);
 
-		#todo generalize table name / ModelName
 		$sql = "
 			insert into $table_name ($varNameList)
 			values ($varValList);
@@ -77,7 +54,35 @@ class Model {
 		return Model::query_fetch($sql);
 	}
 
-	public static function mysqli_fetch_all($result) {
+
+
+	private static function sqlLiteral($val) {
+		if (is_string($val)) {
+			$db = $GLOBALS['db'];
+			$val = mysqli_real_escape_string($db, $val);
+			return "'$val'";
+		}
+		elseif ($val === NULL) { return "NULL"; }
+		elseif ($val === true) { return 1; }
+		elseif ($val === false) { return 0; }
+		else { return $val; }
+	}
+
+	private static function sqlFieldsAndValsFromArray($vars) {
+		$keys = array_keys($vars);
+		$varNameList = implode(', ', $keys);
+
+		$varValLiterals = array();
+		foreach ($keys as $key) {
+			$val = $vars[$key];
+			$varValLiterals[] = Model::sqlLiteral($val);
+		}
+
+		$varValList = implode(', ', $varValLiterals);
+		return array($varNameList, $varValList);
+	}
+
+	private static function mysqli_fetch_all($result) {
 		$rows = array();
 		while ($row = mysqli_fetch_assoc($result)) {
 			$rows[] = $row;
@@ -85,7 +90,7 @@ class Model {
 		return $rows;
 	}
 
-	public static function query_fetch($sql) {
+	private static function query_fetch($sql) {
 		$db = $GLOBALS['db'];
 		if ($db) {
 			$result = mysqli_query($db, $sql);
