@@ -17,7 +17,6 @@ class Controller {
 	public static function do_route($route) {
 		# init
 		$class = get_called_class();
-		$db = $class::connect_db();
 
 		# find route
 		$method = "action_$route";
@@ -28,13 +27,6 @@ class Controller {
 		# do route and give response
 		$response = $class::$method();
 		die($response);
-	}
-
-	# use WP config to connect to db #todo generalize
-	public static function connect_db() {
-		#require_once('or-config.php');
-		$db = $GLOBALS['db'] = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-		return $db;
 	}
 
 	public static function action_404() {

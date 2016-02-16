@@ -9,14 +9,25 @@ function httpMethod() {
 }
 
 
-# connection to db
-function db() {
-    $db = $GLOBALS['db'];
-    if (!$db) {
-        trigger_error('problem connecting to database', E_USER_ERROR);
-    }
-    else {
+class Db {
+
+    public static function connectToDb() {
+        $db = $GLOBALS['db'] = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
         return $db;
     }
+
+    # connection to db
+    public static function conn() {
+        $db = ( isset($GLOBALS['db'])
+                   ? $GLOBALS['db']
+                   : Db::connectToDb() );
+        if (!$db) {
+            trigger_error('problem connecting to database', E_USER_ERROR);
+        }
+        else {
+            return $db;
+        }
+    }
+
 }
 

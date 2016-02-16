@@ -3,10 +3,10 @@
 class Model {
 
 	function __construct($vars) {
-        self::updateFields($vars);
+        $this->updateFields($vars);
 	}
 
-    public static function updateFields($vars) {
+    public function updateFields($vars) {
 		foreach ($vars as $key => $val) {
 			$this->{$key} = $val;
 		}
@@ -15,8 +15,7 @@ class Model {
 	public static function create($vars) {
 		if (!count($vars)) trigger_error("Model::create needs at least one key-value pair", E_USER_ERROR);
 
-		$db = $GLOBALS['db'];
-		if (!$db) trigger_error('problem connecting to database', E_USER_ERROR);
+		$db = Db::conn();
 
 		# populate object
 		$ClassName = get_called_class();
@@ -58,7 +57,7 @@ class Model {
 
 	private static function sqlLiteral($val) {
 		if (is_string($val)) {
-			$db = $GLOBALS['db'];
+			$db = Db::conn();
 			$val = mysqli_real_escape_string($db, $val);
 			return "'$val'";
 		}
@@ -91,16 +90,10 @@ class Model {
 	}
 
 	private static function query_fetch($sql) {
-		$db = $GLOBALS['db'];
-		if ($db) {
-			$result = mysqli_query($db, $sql);
-			$rows = Model::mysqli_fetch_all($result);
-			return $rows;
-		}
-		else {
-			trigger_error("problem connecting to DB");
-			die("problem connecting to DB");
-		}
+		$db = Db::conn();
+        $result = mysqli_query($db, $sql);
+        $rows = Model::mysqli_fetch_all($result);
+        return $rows;
 	}
 
 }
