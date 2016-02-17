@@ -4,3 +4,5 @@ controllers/MyController.php
 ormrouter
 models/*
 controllers/*
+/*.sql
+classes/PipeDriveAPI.php
