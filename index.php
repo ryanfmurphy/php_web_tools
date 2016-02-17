@@ -1,7 +1,8 @@
 <?php
 # Ryan Murphy Feb 2016
-# direct /api/* to its own router, everything else to WordPress
+# kick off router for /api/* URIs
 
+# gives us $ControllerClass
 require_once('util/includes.php');
 
 $route = $ControllerClass::check_route();
