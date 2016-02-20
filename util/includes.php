@@ -11,6 +11,8 @@ foreach (glob('util/*.php') as $util_file) {
 require_once('classes/Db.php');
 require_once('classes/Model.php');
 require_once('classes/Controller.php');
+require_once('classes/PipeDriveAPI.php');
+require_once('classes/StripeAPI.php');
 
 
 # controllers
