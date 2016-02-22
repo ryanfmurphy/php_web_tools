@@ -5,4 +5,9 @@ ormrouter
 models/*
 controllers/*
 /*.sql
-classes/PipeDriveAPI.php
+/classes/PipeDriveAPI.php
+/classes/StripeAPI.php
+/email-example.php
+/email_templates/
+/html
+/scripts
