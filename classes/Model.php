@@ -20,7 +20,7 @@ class Model {
         return $obj->updateExisting();
     }
 
-    public static function get($vars=array()) {
+    public static function get($vars=array(), $only1=false) {
         $idField = self::getIdFieldName();
 
         if (is_string($vars)) {
@@ -35,7 +35,11 @@ class Model {
             $sql = self::buildSelectSql($vars);
         }
 
-        return Model::query_fetch($sql);
+        return self::query_fetch($sql, $only1);
+    }
+
+    public static function get1($vars=array()) {
+        return self::get($vars, true);
     }
 
     public function updateFields($vars) {
@@ -45,7 +49,7 @@ class Model {
     }
 
 
-    public function insertAsNew() {
+    public function insertAsNew($fetch_full_obj=true) {
         $table_name = self::table_name();
 
         $objVars = get_object_vars($this);
@@ -64,32 +68,22 @@ class Model {
 
         if ($result) {
             $this->setId(mysqli_insert_id($db)); #todo fill in default fields too?
-            return $this;
+            if ($fetch_full_obj) {
+                $ClassName = get_called_class();
+                $obj = $ClassName::get1(array(
+                    $this->getIdFieldName() => $this->getId()
+                ));
+                return $obj;
+            }
+            else {
+                return $this;
+            }
         }
         else {
             Db::error("Model::create could not create object.", $sql);
         }
 
     }
-
-    public static function buildSelectSql($vars) {
-        $table_name = self::table_name();
-        $sql = "
-            select * from $table_name
-        ";
-
-        # add where clauses
-        $whereOrAnd = 'where';
-        foreach ($vars as $key => $val) {
-            $val = Db::sqlLiteral($val);
-            $sql .= "\n$whereOrAnd $key = $val";
-            $whereOrAnd = 'and';
-        }
-
-        $sql .= ";";
-        return $sql;
-    }
-
 
     # save changes of existing obj/row to db
     public function updateExisting() {
@@ -130,6 +124,35 @@ class Model {
 
     }
 
+    public function save() {
+        if ($this->getId()) {
+            return $this->updateExisting();
+        }
+        else {
+            return $this->insertAsNew();
+        }
+    }
+
+    public static function buildSelectSql($vars) {
+        $table_name = self::table_name();
+        $sql = "
+            select * from $table_name
+        ";
+
+        # add where clauses
+        $whereOrAnd = 'where';
+        foreach ($vars as $key => $val) {
+            $val = Db::sqlLiteral($val);
+            $sql .= "\n$whereOrAnd $key = $val";
+            $whereOrAnd = 'and';
+        }
+
+        $sql .= ";";
+        return $sql;
+    }
+
+
+
 
     private function setId($val) {
         $ClassName = get_called_class();
@@ -160,11 +183,20 @@ class Model {
         return $rows;
     }
 
-    private static function query_fetch($sql) {
+    private static function mysqli_fetch1($result) {
+        $ClassName = get_called_class();
+        return mysqli_fetch_object($result, $ClassName);
+    }
+
+    private static function query_fetch($sql, $only1=false) {
         $db = Db::conn();
         $result = mysqli_query($db, $sql);
-        $rows = Model::mysqli_fetch_all($result);
-        return $rows;
+        if ($only1) {
+            return self::mysqli_fetch1($result);
+        }
+        else {
+            return self::mysqli_fetch_all($result);
+        }
     }
 
 }
