@@ -34,4 +34,8 @@ class Controller {
 		return '404 Not Found';
 	}
 
+    public static function log($msg) {
+        log_msg($msg);
+    }
+
 }
