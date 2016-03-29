@@ -12,3 +12,15 @@ controllers/*
 /html
 /scripts
 /util/custom_includes.php
+/log
+ApiController.php
+Contact.php
+Document.php
+MandrillAPI.php
+PipeDriveAPI.php
+Property.php
+StripeAPI.php
+/classes/mandrill_api.zip
+/classes/mailchimp-mandrill-api-php-da3adc10042e/
+/files
+/sql

@@ -8,19 +8,19 @@ function httpMethod() {
     return $_SERVER['REQUEST_METHOD'];
 }
 
-function curl_get($url, $vars=NULL, $username=NULL, $password=NULL) {
-    return do_curl($url, $vars, null, $username, $password);
+function curl_get($url, $vars=NULL, $username=NULL, $password=NULL, $headers=NULL) {
+    return do_curl($url, $vars, null, $username, $password, false, $headers);
 }
 
-function curl_post($url, $vars, $username=NULL, $password=NULL) {
-    return do_curl($url, null, $vars, $username, $password);
+function curl_post($url, $vars, $username=NULL, $password=NULL, $headers=NULL) {
+    return do_curl($url, null, $vars, $username, $password, false, $headers);
 }
 
-function curl_put($url, $vars, $username=NULL, $password=NULL) {
-    return do_curl($url, null, $vars, $username, $password, true);
+function curl_put($url, $vars, $username=NULL, $password=NULL, $headers=NULL) {
+    return do_curl($url, null, $vars, $username, $password, true, $headers);
 }
 
-function do_curl($url, $get_vars=null, $post_vars=NULL, $username=NULL, $password=NULL, $do_PUT_request=false) {
+function do_curl($url, $get_vars=null, $post_vars=NULL, $username=NULL, $password=NULL, $do_PUT_request=false, $headers) {
     $ch = curl_init();
 
     { # set the options
@@ -52,6 +52,16 @@ function do_curl($url, $get_vars=null, $post_vars=NULL, $username=NULL, $passwor
             curl_setopt($ch, CURLOPT_USERPWD, "$username:$password"); 
         }
 
+        if ($headers) { # headers
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $fileSizeLimit = 10000000; #todo move this
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_INFILESIZE, $fileSizeLimit);
+        }
+
+        # return val
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     }
 
@@ -76,5 +86,20 @@ function dollars2cents($numDollars) {
 
 function cents2dollars($numDollars) {
     return round($numDollars / 100, 2);
+}
+
+
+function json_error($msg) {
+    die(
+        json_encode(array(
+            'error' => array(
+                'message' => $msg
+            )
+        ))
+    );
+}
+
+function log_msg($msg) {
+    error_log($msg, 3, "log");
 }
 
