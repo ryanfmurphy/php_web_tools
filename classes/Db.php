@@ -48,7 +48,7 @@ class Db {
         foreach ($keys as $key) {
             $val = $vars[$key];
             if (is_array($val) || is_object($val)) {
-                trigger_error('complex object / array passed to sqlFieldsAndValsFromArray: '.print_r($val,1));
+                trigger_error("complex object / array passed to sqlFieldsAndValsFromArray: key=$key, val = ".print_r($val,1));
             }
             $varValLiterals[] = Db::sqlLiteral($val);
         }
