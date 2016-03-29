@@ -16,20 +16,23 @@ class Model {
 
     public static function update($vars) {
         $ClassName = get_called_class();
-        $obj = new $ClassName($vars);
+        $id = $ClassName::arrGetId($vars);
+        $obj = $ClassName::get1($id); 
+        $obj->updateFields($vars);
         return $obj->updateExisting();
     }
 
     public static function get($vars=array(), $only1=false) {
         $idField = self::getIdFieldName();
 
-        if (is_string($vars)) {
+        if (is_string($vars) && !is_numeric($vars)) {
             $sql = $vars;
         }
         else {
             # syntactic sugar: just pass num to fetch by ID
-            if (is_int($vars)) {
-                $vars = array( $idField => $vars );
+            if (is_numeric($vars)) {
+                $id = (int)$vars;
+                $vars = array( $idField => $id );
             }
 
             $sql = self::buildSelectSql($vars);
@@ -165,6 +168,11 @@ class Model {
         return $this->{$idField};
     }
 
+    private static function arrGetId($arr) {
+        $idField = self::getIdFieldName();
+        return $arr[$idField];
+    }
+
     private static function getIdFieldName() {
         return self::table_name() . '_id';
     }
@@ -199,5 +207,33 @@ class Model {
         }
     }
 
+    public static function log($msg) {
+        log_msg($msg);
+    }
+
+
+    public static function error($msg) {
+        return json_error($msg);
+        #die($msg);
+        #trigger_error($msg, E_USER_ERROR);
+    }
+
+    # convert vars into Mandrill merge_vars format
+    public function mandrillize() {
+        $objVars = $this->get_public_vars();
+        $mandrillVars = array();
+        foreach ($objVars as $key => $val) {
+            $mandrillVars[] = array(
+                'name' => $key,
+                'content' => $val,
+            );
+        }
+        return $mandrillVars;
+    }
+
+    public function get_public_vars() {
+        # subclasses don't have to share all their vars
+        return get_object_vars($this);
+    }
 }
 
