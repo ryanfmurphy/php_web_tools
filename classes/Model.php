@@ -67,10 +67,10 @@ class Model {
         ";
 
         $db = Db::conn();
-        $result = mysqli_query($db, $sql);
+        $result = $db->query($sql);
 
         if ($result) {
-            $this->setId(mysqli_insert_id($db)); #todo fill in default fields too?
+            $this->setId($db->lastInsertId()); #todo fill in default fields too?
             if ($fetch_full_obj) {
                 $ClassName = get_called_class();
                 $obj = $ClassName::get1(array(
@@ -116,7 +116,7 @@ class Model {
         }
 
         $db = Db::conn();
-        $result = mysqli_query($db, $sql);
+        $result = $db->query($sql);
 
         if ($result) {
             return $this;
@@ -182,28 +182,29 @@ class Model {
         return ClassName2table_name($ClassName);
     }
 
-    private static function mysqli_fetch_all($result) {
+    private static function fetch_all($result) {
         $ClassName = get_called_class();
         $rows = array();
-        while ($row = mysqli_fetch_object($result, $ClassName)) {
+        $db = Db::conn();
+        while ($row = $result->fetchObject($ClassName)) {
             $rows[] = $row;
         }
         return $rows;
     }
 
-    private static function mysqli_fetch1($result) {
+    private static function fetch1($result) {
         $ClassName = get_called_class();
-        return mysqli_fetch_object($result, $ClassName);
+        return $result->fetchObject($ClassName);
     }
 
     private static function query_fetch($sql, $only1=false) {
         $db = Db::conn();
-        $result = mysqli_query($db, $sql);
+        $result = $db->query($sql);
         if ($only1) {
-            return self::mysqli_fetch1($result);
+            return self::fetch1($result);
         }
         else {
-            return self::mysqli_fetch_all($result);
+            return self::fetch_all($result);
         }
     }
 
