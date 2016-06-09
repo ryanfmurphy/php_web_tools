@@ -4,7 +4,7 @@ class Db {
 
     public static function connectToDb() {
         $db = $GLOBALS['db'] = new PDO(
-            "mysql:host=".DB_HOST.";dbname=".DB_NAME,
+            DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,
             DB_USER, DB_PASSWORD
         );
         return $db;
@@ -32,7 +32,7 @@ class Db {
 $msg . "
     SQL error:
          errorCode = ".$db->errorCode()."
-         errorInfo = ".$db->errorInfo()."
+         errorInfo = ".print_r($db->errorInfo(),1)."
      for query '$sql'
 "
         , E_USER_ERROR);
@@ -71,6 +71,10 @@ $msg . "
         return array($varNameList, $varValList);
     }
 
-
+    public static function sequenceName($table, $field) {
+        #todo this is just postgres, return null for mysql?
+        return $table.'_'.$field.'_seq';
+    }
+    
 }
 
