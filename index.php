@@ -2,11 +2,23 @@
 # Ryan Murphy Feb 2016
 # kick off router for /api/* URIs
 
-# gives us $ControllerClass
-require_once('util/includes.php');
+{ #todo make self-sufficient, don't depend on DbViewer
+    # we need setDbSearchPath
+    require_once('/Users/murftown/webroot/db_viewer/init.php');
+}
 
-$route = $ControllerClass::check_route();
-if (!$route) $route = $ControllerClass::action_404();
+{ # setup
+    # gives us $ControllerClass
+    require_once('util/includes.php');
+    DbViewer::setDbSearchPath($search_path);
+}
 
-$ControllerClass::do_route($route);
+{ # route the URL to the action
+    $route = $ControllerClass::check_route();
+    if (!$route) {
+        $route = $ControllerClass::action_404();
+    }
+
+    $ControllerClass::do_route($route);
+}
 

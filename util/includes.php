@@ -20,8 +20,6 @@ if (file_exists('util/custom_includes.php')) {
 $ControllerClass = null;
 foreach (glob('controllers/*.php') as $controller_file) {
     if (!$ControllerClass) {
-        #$controller_name = basename($controller_file, '.php');
-        #$ControllerClass = snake_case2CapCase($controller_name);
         $ControllerClass = basename($controller_file, '.php');
     }
     require_once($controller_file);
