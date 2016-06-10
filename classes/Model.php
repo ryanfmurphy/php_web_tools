@@ -30,23 +30,32 @@ class Model {
         return $obj->updateExisting();
     }
 
-    public static function get($vars=array(), $ClassName=null, $only1=false) {
-        $idField = self::getIdFieldName();
+    public static function get($varsOrSql=array(), $ClassName=null, $only1=false) {
+        $sql = self::resolveSql($varsOrSql, $ClassName);
+        return self::query_fetch($sql, $ClassName, $only1);
+    }
 
-        if (is_string($vars) && !is_numeric($vars)) {
-            $sql = $vars;
+    public static function resolveSql($varsOrSql, $ClassName=null) {
+        $seemsLikeSql = (is_string($varsOrSql) && !is_numeric($varsOrSql));
+        if ($seemsLikeSql) {
+            return $varsOrSql;
         }
         else {
             # syntactic sugar: just pass num to fetch by ID
-            if (is_numeric($vars)) {
-                $id = (int)$vars;
+            if (is_numeric($varsOrSql)) {
+                $idField = self::getIdFieldName();
+                $id = (int)$varsOrSql;
                 $vars = array( $idField => $id );
             }
+            else {
+                $vars = $varsOrSql;
+            }
 
-            $sql = self::buildSelectSql($vars, $ClassName);
+            return self::buildSelectSql($vars, $ClassName);
         }
+    }
 
-        return self::query_fetch($sql, $ClassName, $only1);
+    public static function view($vars=array(), $ClassName=null, $only1=false) {
     }
 
     public static function get1($vars=array(), $ClassName=null) {
