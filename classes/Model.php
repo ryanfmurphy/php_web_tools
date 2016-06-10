@@ -31,31 +31,13 @@ class Model {
     }
 
     public static function get($varsOrSql=array(), $ClassName=null, $only1=false) {
-        $sql = self::resolveSql($varsOrSql, $ClassName);
+        $sql = self::resolveSelectSql($varsOrSql, $ClassName);
         return self::query_fetch($sql, $ClassName, $only1);
     }
 
-    public static function resolveSql($varsOrSql, $ClassName=null) {
-        $seemsLikeSql = (is_string($varsOrSql) && !is_numeric($varsOrSql));
-        if ($seemsLikeSql) {
-            return $varsOrSql;
-        }
-        else {
-            # syntactic sugar: just pass num to fetch by ID
-            if (is_numeric($varsOrSql)) {
-                $idField = self::getIdFieldName();
-                $id = (int)$varsOrSql;
-                $vars = array( $idField => $id );
-            }
-            else {
-                $vars = $varsOrSql;
-            }
-
-            return self::buildSelectSql($vars, $ClassName);
-        }
-    }
-
-    public static function view($vars=array(), $ClassName=null, $only1=false) {
+    public static function view($varsOrSql=array(), $ClassName=null) {
+        $sql = self::resolveSelectSql($varsOrSql, $ClassName);
+        return self::query_view($sql, $ClassName);
     }
 
     public static function get1($vars=array(), $ClassName=null) {
@@ -75,6 +57,26 @@ class Model {
     public function updateFields($vars) {
         foreach ($vars as $key => $val) {
             $this->{$key} = $val;
+        }
+    }
+
+    public static function resolveSelectSql($varsOrSql, $ClassName=null) {
+        $seemsLikeSql = (is_string($varsOrSql) && !is_numeric($varsOrSql));
+        if ($seemsLikeSql) {
+            return $varsOrSql;
+        }
+        else {
+            # syntactic sugar: just pass num to fetch by ID
+            if (is_numeric($varsOrSql)) {
+                $idField = self::getIdFieldName();
+                $id = (int)$varsOrSql;
+                $vars = array( $idField => $id );
+            }
+            else {
+                $vars = $varsOrSql;
+            }
+
+            return self::buildSelectSql($vars, $ClassName);
         }
     }
 
@@ -260,6 +262,16 @@ class Model {
         else {
             return self::fetch_all($result, $ClassName);
         }
+    }
+
+    private static function query_view($sql, $ClassName=null) {
+        $vars = requestVars();
+        $query_string = http_build_query(array(
+            'sql' => $sql,
+        ));
+        $db_viewer_url = "/db_viewer/db_viewer.php?$query_string";
+        header("302 Temporary");
+        header("Location: $db_viewer_url");
     }
 
     public static function log($msg) {

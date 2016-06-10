@@ -75,35 +75,43 @@ class MyController extends Controller {
     public static function __callStatic($method, $args) {
         $matchesActionPattern = preg_match("/^
             action
-            _(?<action>get|create|update)
-            _(?<table_specifier>\w+)
+            _(?<action>get|get1|view|create|update)
+            _(?<table>\w+)
         $/x", $method, $matches);
 
-
         if ($matchesActionPattern) {
-            $table_specifier = $matches['table_specifier'];
+            $table = $matches['table'];
+
+            /*
             $table = $table_specifier;
 
             $tables = DbViewer::sqlTables(); #todo don't depend on DbViewer
             $table = (isset($tables[$table_specifier])
                         ? $table_specifier
                         : DbViewer::depluralize($table_specifier));
-            # (s$|$)          #todo do an unpluralize() fn
 
             $tablePlural = DbViewer::pluralize($table); #todo #indepedence
+            */
+
             $ClassName = Model::ClassName($table);
             $vars = requestVars();
 
             switch ($method) {
-                case "action_get_$table":
+                case "action_get1_$table":
                     return json_encode(
                         Model::get1($vars, $ClassName)
                     );
                     break;
 
-                case "action_get_$tablePlural":
+                case "action_get_$table":
                     return json_encode(
                         Model::get($vars, $ClassName)
+                    );
+                    break;
+
+                case "action_view_$table":
+                    return json_encode(
+                        Model::view($vars, $ClassName)
                     );
                     break;
 
