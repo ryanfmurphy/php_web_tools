@@ -1,6 +1,6 @@
 <?php
 { # orm_router specific vars
-	define('URI_PREFIX', '/ormrouter');
+    define('URI_PREFIX', '/ormrouter');
 }
 
 { # new config style
@@ -16,6 +16,7 @@
 }
 
 { # cosmetic / UI options
-    $background = 'dark'; # vs 'light', the default
+    #$background = 'dark';
+    # vs 'light', the default
 }
 ?>
