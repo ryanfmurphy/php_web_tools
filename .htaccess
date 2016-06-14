@@ -1,5 +1,13 @@
 # for Apache configurations - make everything run through index.php
 
+# you may need this in your httpd.conf <VirtualHost> to enable .htaccess:
+    #<Directory /path/to/docroot>
+    #    Options FollowSymLinks
+    #</Directory>
+
 <IfModule mod_rewrite.c>
-    RewriteRule ^(.*)$ index.php [QSA,L]
+    RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule . index.php [L]
 </IfModule>
