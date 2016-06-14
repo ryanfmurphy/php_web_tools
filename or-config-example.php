@@ -1,23 +1,7 @@
 <?php
-# UNDER CONSTRUCTION - transitioning from consts to vars
-# bear with me! :)
-#   ~ 2016-06-13 RM
-
-{ # old config style - won't need this soon
-    /*
-    define('DB_HOST', '<your-host-here>');
-
-    define('DB_USER', '<your-db-user-here>');
-    define('DB_PASSWORD', '<your-password-here>');
-    define('DB_NAME', '<your-database-name-here>');
-    define('DB_TYPE', '<mysql-pgsql-sqlite>');
-    */
-
+{ # orm_router specific vars
 	define('URI_PREFIX', '/ormrouter');
 }
-
-
-
 
 { # new config style
     $db_user = '<your-db-user-here>';
