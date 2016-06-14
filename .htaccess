@@ -1,0 +1,5 @@
+# for Apache configurations - make everything run through index.php
+
+<IfModule mod_rewrite.c>
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

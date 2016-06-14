@@ -1,5 +1,4 @@
 /or-config.php
-/.htaccess
 /controllers/MyController.php
 /ormrouter
 /models/*
