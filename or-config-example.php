@@ -4,12 +4,14 @@
 #   ~ 2016-06-13 RM
 
 { # old config style - won't need this soon
+    /*
     define('DB_HOST', '<your-host-here>');
 
     define('DB_USER', '<your-db-user-here>');
     define('DB_PASSWORD', '<your-password-here>');
     define('DB_NAME', '<your-database-name-here>');
     define('DB_TYPE', '<mysql-pgsql-sqlite>');
+    */
 
 	define('URI_PREFIX', '/ormrouter');
 }
@@ -23,9 +25,6 @@
     $db_name = '<your-database-name-here>';
     $db_type = '<mysql-pgsql-sqlite>';
     #$db_port = '<port>';
-
-    # not used yet
-    #$uri_prefix = '/ormrouter';
 }
 
 { # postgres-specific options

@@ -3,9 +3,12 @@
 class Db {
 
     public static function connectToDb() {
+        global $db_type, $db_host, $db_name, $db_user, $db_password;
         $db = $GLOBALS['db'] = new PDO(
-            DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,
-            DB_USER, DB_PASSWORD
+            "$db_type:host=$db_host:dbname=$db_name",
+            $db_user, $db_password
+            #DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,
+            #DB_USER, DB_PASSWORD
         );
         return $db;
     }
