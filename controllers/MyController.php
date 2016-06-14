@@ -1,7 +1,11 @@
 <?php
 class MyController extends Controller {
 
-    /*
+    public static function action_hello() {
+        $customMsg = "Glad you came to see this web site!";
+        require_once('views/hello.html.php');
+    }
+
     public static function action_get_companies() {
         return json_encode(
             Company::get( requestVars() )
@@ -50,8 +54,8 @@ class MyController extends Controller {
             Inventory::update( requestVars() )
         );
     }
-    */
 
+    /*
 	# $route is the result of check_route()
 	public static function do_route($route) {
 		# init
@@ -82,16 +86,14 @@ class MyController extends Controller {
         if ($matchesActionPattern) {
             $table = $matches['table'];
 
-            /*
-            $table = $table_specifier;
+            #$table = $table_specifier;
 
-            $tables = DbViewer::sqlTables(); #todo don't depend on DbViewer
-            $table = (isset($tables[$table_specifier])
-                        ? $table_specifier
-                        : DbViewer::depluralize($table_specifier));
+            #$tables = DbViewer::sqlTables(); #todo don't depend on DbViewer
+            #$table = (isset($tables[$table_specifier])
+            #            ? $table_specifier
+            #            : DbViewer::depluralize($table_specifier));
 
-            $tablePlural = DbViewer::pluralize($table); #todo #indepedence
-            */
+            #$tablePlural = DbViewer::pluralize($table); #todo #indepedence
 
             $ClassName = Model::ClassName($table);
             $vars = requestVars();
@@ -135,4 +137,5 @@ class MyController extends Controller {
             return self::action_404();
         }
     }
+    */
 }
