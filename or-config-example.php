@@ -3,7 +3,7 @@
 # bear with me! :)
 #   ~ 2016-06-13 RM
 
-{ # old config style
+{ # old config style - won't need this soon
     define('DB_HOST', '<your-host-here>');
 
     define('DB_USER', '<your-db-user-here>');
@@ -13,6 +13,9 @@
 
 	define('URI_PREFIX', '/ormrouter');
 }
+
+
+
 
 { # new config style
     $db_user = '<your-db-user-here>';
