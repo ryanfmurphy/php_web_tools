@@ -4,13 +4,13 @@
 
 { #todo make self-sufficient, don't depend on DbViewer
     # we need setDbSearchPath
-    require_once('/Users/murftown/webroot/db_viewer/init.php');
+    #require_once('/Users/murftown/webroot/db_viewer/init.php');
 }
 
 { # setup
     # gives us $ControllerClass
     require_once('util/includes.php');
-    DbViewer::setDbSearchPath($search_path);
+    #DbViewer::setDbSearchPath($search_path);
 }
 
 { # route the URL to the action
