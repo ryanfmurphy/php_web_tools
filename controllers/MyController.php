@@ -1,6 +1,7 @@
 <?php
 class MyController extends Controller {
 
+    /*
     public static function action_hello() {
         $customMsg = "Glad you came to see this web site!";
         require_once('views/hello.html.php');
@@ -54,8 +55,8 @@ class MyController extends Controller {
             Inventory::update( requestVars() )
         );
     }
+    */
 
-    /*
 	# $route is the result of check_route()
 	public static function do_route($route) {
 		# init
@@ -137,5 +138,4 @@ class MyController extends Controller {
             return self::action_404();
         }
     }
-    */
 }
