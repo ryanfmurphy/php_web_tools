@@ -10,7 +10,7 @@
 { # setup
     # gives us $ControllerClass
     require_once('util/includes.php');
-    #DbViewer::setDbSearchPath($search_path);
+    DbUtil::setDbSearchPath($search_path);
 }
 
 { # route the URL to the action
