@@ -5,7 +5,7 @@ class Db {
     public static function connectToDb() {
         global $db_type, $db_host, $db_name, $db_user, $db_password;
         $db = $GLOBALS['db'] = new PDO(
-            "$db_type:host=$db_host:dbname=$db_name",
+            "$db_type:host=$db_host;dbname=$db_name",
             $db_user, $db_password
             #DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,
             #DB_USER, DB_PASSWORD
@@ -79,5 +79,21 @@ $msg . "
         return $table.'_'.$field.'_seq';
     }
     
+    public static function sql($query) {
+        $db = Db::conn();
+        $result = $db->query($query);
+        if (is_a($result, 'PDOStatement')) {
+            return $result->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else {
+            return $result;
+        }
+    }
+    
+    public static function quote($val) {
+        $db = Db::conn();
+        #todo #fixme might not work for nulls?
+        return $db->quote($val);
+    }
 }
 
