@@ -2,6 +2,11 @@
 class MyController extends Controller {
 
     /*
+    public static function action_index() {
+        $customMsg = "Glad you came to see this web site!";
+        require_once('views/hello.html.php');
+    }
+
     public static function action_hello() {
         $customMsg = "Glad you came to see this web site!";
         require_once('views/hello.html.php');
