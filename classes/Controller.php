@@ -8,6 +8,10 @@ class Controller {
 			$route = $matches[1];
 			return $route;
 		}
+		elseif (preg_match("#".URI_PREFIX."/?#", $overallUri, $matches)) {
+			$route = "index";
+			return $route;
+		}
 		else {
 			return false;
 		}
