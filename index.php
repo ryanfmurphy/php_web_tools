@@ -10,7 +10,9 @@
 { # setup
     # gives us $ControllerClass
     require_once('util/includes.php');
-    DbUtil::setDbSearchPath($search_path);
+    if (isset($search_path)) {
+        DbUtil::setDbSearchPath($search_path);
+    }
 }
 
 { # route the URL to the action
