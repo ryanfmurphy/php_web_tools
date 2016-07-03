@@ -98,8 +98,9 @@ class Model {
             $sequenceName = Db::sequenceName($table_name, $idField);
             $lastInsertId = Db::conn()->lastInsertId($sequenceName);
 
-            $this->setId($lastInsertId); #todo fill in default fields too?
+            $this->setId($lastInsertId);
 
+            # fill in default fields too?
             if ($fetch_full_obj) {
                 #todo do we need class_exists check here?
                 $vars = array(
