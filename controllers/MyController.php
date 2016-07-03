@@ -1,15 +1,13 @@
 <?php
 class MyController extends Controller {
 
-    /*
     public static function action_index() {
         $customMsg = "Glad you came to see this web site!";
         require_once('views/hello.html.php');
     }
 
     public static function action_hello() {
-        $customMsg = "Glad you came to see this web site!";
-        require_once('views/hello.html.php');
+        die("Glad you came to see this web site!");
     }
 
     public static function action_get_companies() {
@@ -60,7 +58,6 @@ class MyController extends Controller {
             Inventory::update( requestVars() )
         );
     }
-    */
 
 	# $route is the result of check_route()
 	public static function do_route($route) {
@@ -133,6 +130,12 @@ class MyController extends Controller {
                     return json_encode(
                         Model::update($vars, $ClassName)
                     );
+
+                #todo
+                #case "action_delete_$table":
+                #    return json_encode(
+                #        Model::delete($vars, $ClassName)
+                #    );
 
                 default:
                     return self::action_404();
