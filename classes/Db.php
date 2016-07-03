@@ -55,22 +55,27 @@ $msg . "
 
     public static function sqlFieldsAndValsFromArray($vars) {
         $keys = array_keys($vars);
-        $varNameList = implode(', ', $keys);
 
-        $varValLiterals = array();
-        foreach ($keys as $key) {
-            $val = $vars[$key];
-            if (is_array($val) || is_object($val)) {
-                trigger_error(
-"complex object / array passed to sqlFieldsAndValsFromArray:
-    key=$key,
-    val = ".print_r($val,1)
-                );
-            }
-            $varValLiterals[] = Db::sqlLiteral($val);
+        { # key list
+            $varNameList = implode(', ', $keys);
         }
 
-        $varValList = implode(', ', $varValLiterals);
+        { # val list
+            $varValLiterals = array();
+            foreach ($keys as $key) {
+                $val = $vars[$key];
+                if (is_array($val) || is_object($val)) {
+                    trigger_error(
+    "complex object / array passed to sqlFieldsAndValsFromArray:
+        key = $key,
+        val = ".print_r($val,1)
+                    );
+                }
+                $varValLiterals[] = Db::sqlLiteral($val);
+            }
+            $varValList = implode(', ', $varValLiterals);
+        }
+
         return array($varNameList, $varValList);
     }
 
@@ -94,6 +99,31 @@ $msg . "
         $db = Db::conn();
         #todo #fixme might not work for nulls?
         return $db->quote($val);
+    }
+
+
+    #todo #fixme - halfway through moving some of the
+    # core Model functionality into Db.
+    # goal is to remove all the weird $ClassName crap from Model
+    # and allow the MetaController to function without Model Objects
+
+    public static function insertRow($tableName, $rowVars) {
+        #todo work around this limitation
+        # e.g. postgres will do:
+        #   insert into my_table default values
+        if (!count($rowVars)) {
+            trigger_error("Db::insertRow needs at least one key-value pair", E_USER_ERROR);
+        }
+        list($varNameList, $varValList) = Db::sqlFieldsAndValsFromArray($rowVars);
+
+        $sql = "
+            insert into $tableName ($varNameList)
+            values ($varValList);
+        ";
+
+        $db = Db::conn();
+        $result = $db->query($sql);
+        return $result;
     }
 }
 
