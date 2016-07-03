@@ -96,7 +96,7 @@ class Model {
                             : self::getIdFieldName($ClassName));
 
             $sequenceName = Db::sequenceName($table_name, $idField);
-            $lastInsertId = $db->lastInsertId($sequenceName);
+            $lastInsertId = Db::conn()->lastInsertId($sequenceName);
 
             $this->setId($lastInsertId); #todo fill in default fields too?
 
