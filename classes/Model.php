@@ -53,6 +53,7 @@ class Model {
         }
     }
 
+    # implementation
 
     public function updateFields($vars) {
         foreach ($vars as $key => $val) {
@@ -87,21 +88,9 @@ class Model {
         $table_name = self::table_name($ClassName);
 
         $objVars = get_object_vars($this);
-        if (!count($objVars)) { #todo is this ultimately necessary?
-            trigger_error("Model::create needs at least one key-value pair", E_USER_ERROR);
-        }
-        list($varNameList, $varValList) = Db::sqlFieldsAndValsFromArray($objVars);
-
-        $sql = "
-            insert into $table_name ($varNameList)
-            values ($varValList);
-        ";
-
-        $db = Db::conn();
-        $result = $db->query($sql);
+        $result = Db::insertRow($table_name, $objVars);
 
         if ($result) {
-
             $idField = (class_exists($ClassName)
                             ? $ClassName::getIdFieldName()
                             : self::getIdFieldName($ClassName));
