@@ -3,10 +3,8 @@ include('or-config.php');
 
 # util
 foreach (glob('util/*.php') as $util_file) {
-    #todo make sure this works
-    if ($util_file != 'util/includes.php') {
-        require_once($util_file);
-    }
+    # require_once will avoid circularly include this file
+    require_once($util_file);
 }
 
 
