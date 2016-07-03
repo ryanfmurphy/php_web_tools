@@ -14,9 +14,4 @@
 { # postgres-specific options
     # $search_path = 'schema1, schema2, etc';
 }
-
-{ # cosmetic / UI options
-    #$background = 'dark';
-    # vs 'light', the default
-}
 ?>
