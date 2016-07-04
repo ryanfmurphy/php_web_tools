@@ -116,8 +116,8 @@ class MyController extends Controller {
 
                 case "action_view_$table":
                     return json_encode(
-                        Model::view($vars, $ClassName)
-                        #Db::viewTable($table, $vars)
+                        #Model::view($vars, $ClassName)
+                        Db::viewTable($table, $vars)
                     );
                     break;
 

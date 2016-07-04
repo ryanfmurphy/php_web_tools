@@ -35,10 +35,12 @@ class Model {
         return self::query_fetch($sql, $ClassName, $only1);
     }
 
+    /*
     public static function view($varsOrSql=array(), $ClassName=null) {
         $sql = self::resolveSelectSql($varsOrSql, $ClassName);
-        return self::query_view($sql, $ClassName);
+        return Db::viewQuery($sql);
     }
+    */
 
     public static function get1($vars=array(), $ClassName=null) {
         return self::get($vars, $ClassName, true);
@@ -254,6 +256,7 @@ class Model {
         }
     }
 
+    /*
     private static function query_view($sql, $ClassName=null) {
         $vars = requestVars();
         $query_string = http_build_query(array(
@@ -263,6 +266,7 @@ class Model {
         header("302 Temporary");
         header("Location: $db_viewer_url");
     }
+    */
 
     public static function log($msg) {
         log_msg($msg);

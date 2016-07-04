@@ -125,5 +125,38 @@ $msg . "
         $result = $db->query($sql);
         return $result;
     }
+
+    private static function viewQuery($sql) {
+        $vars = requestVars();
+        $query_string = http_build_query(array(
+            'sql' => $sql,
+        ));
+        $db_viewer_url = "/db_viewer/db_viewer.php?$query_string";
+        header("302 Temporary");
+        header("Location: $db_viewer_url");
+    }
+
+    public static function viewTable($table_name, $whereVars=array()) {
+        $sql = self::buildSelectSql($table_name, $whereVars);
+        return Db::viewQuery($sql);
+    }
+
+    public static function buildSelectSql($table_name, $vars) {
+        $sql = "
+            select * from $table_name
+        ";
+
+        # add where clauses
+        $whereOrAnd = 'where';
+        foreach ($vars as $key => $val) {
+            $val = Db::sqlLiteral($val);
+            $sql .= "\n$whereOrAnd $key = $val";
+            $whereOrAnd = 'and';
+        }
+
+        $sql .= ";";
+        return $sql;
+    }
+
 }
 
