@@ -19,8 +19,7 @@ if (file_exists('util/custom_includes.php')) {
 }
 
 
-# controllers
-if (!isset($ControllerClass) || !$ControllerClass) {
+{ # controllers
     $ControllerClass = null;
     foreach (glob('controllers/*.php') as $controller_file) {
         if (!$ControllerClass) {

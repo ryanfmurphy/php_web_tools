@@ -1,5 +1,5 @@
 <?php
-class MyController extends Controller {
+class ExampleController extends Controller {
 
     public static function action_index() {
         $customMsg = "Glad you came to see this web site!";
