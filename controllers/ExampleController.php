@@ -59,6 +59,14 @@ class ExampleController extends Controller {
         );
     }
 
+
+
+
+    # the following functions are for the MetaController
+    # an optional but useful mode that enables the controller
+    # automatically provide CRUD endpoints for all your database tables
+    # without having to manually implement them or copy/paste them
+
 	# $route is the result of check_route()
 	public static function do_route($route) {
 		# init
