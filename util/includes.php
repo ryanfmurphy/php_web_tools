@@ -20,7 +20,9 @@ if (file_exists('util/custom_includes.php')) {
 
 
 { # controllers
-    $ControllerClass = null;
+    if (!isset($ControllerClass)) {
+        $ControllerClass = null;
+    }
     foreach (glob('controllers/*.php') as $controller_file) {
         if (!$ControllerClass) {
             $ControllerClass = basename($controller_file, '.php');
