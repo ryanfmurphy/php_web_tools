@@ -1,6 +1,5 @@
 /or-config.php
 /or-config.php.bak
-/controllers/MyController.php
 /ormrouter
 /models/*
 /controllers/*
@@ -13,8 +12,6 @@
 /scripts
 /util/custom_includes.php
 /log
-/classes/mandrill_api.zip
-/classes/mailchimp-mandrill-api-php-da3adc10042e/
 /files
 /sql
 *.swp

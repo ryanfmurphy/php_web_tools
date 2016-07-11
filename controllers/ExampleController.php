@@ -59,6 +59,13 @@ class ExampleController extends Controller {
         );
     }
 
+    # an example of a nested route
+    public static function action_nested() {
+        # give the remaining uri (after /nested)
+        # to another controller, in this case "ExampleNestedController"
+        return ExampleNestedController::process_nested_route();
+    }
+
 
 
 

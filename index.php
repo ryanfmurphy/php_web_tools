@@ -10,8 +10,6 @@
     }
 }
 
-{ # route the URL to the action
-    $route = $ControllerClass::check_route();
-    $ControllerClass::do_route($route);
-}
+# route the URL to the appropriate action
+$ControllerClass::process_route();
 
