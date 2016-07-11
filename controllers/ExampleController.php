@@ -2,13 +2,19 @@
 class ExampleController extends Controller {
 
     public static function action_index() {
-        $customMsg = "Glad you came to see this web site!";
-        require_once('views/hello.html.php');
+        $getVars = $_GET;
+        require_once('views/example/index.html.php');
     }
 
-    public static function action_hello() {
-        die("Glad you came to see this web site!");
+    public static function action_other_view() {
+        require_once('views/example/other_view.html.php');
     }
+
+
+
+    # example CRUD endpoints
+    # (assuming you had a table called `company`
+    # and a Class extending Model called Company):
 
     public static function action_get_companies() {
         return json_encode(
@@ -35,6 +41,11 @@ class ExampleController extends Controller {
     }
 
 
+
+    # example CRUD endpoints
+    # (assuming you had a table called `inventory`
+    # and a Class extending Model called Inventory):
+
     public static function action_get_inventories() {
         return json_encode(
             Inventory::get( requestVars() )
@@ -58,6 +69,10 @@ class ExampleController extends Controller {
             Inventory::update( requestVars() )
         );
     }
+
+
+
+
 
     # an example of a nested route
     public static function action_nested() {

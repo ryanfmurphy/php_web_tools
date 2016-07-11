@@ -3,6 +3,7 @@
 # you may need this in your httpd.conf <VirtualHost> to enable .htaccess:
     #<Directory /path/to/docroot>
     #    Options FollowSymLinks
+    #    AllowOverride All
     #</Directory>
 
 <IfModule mod_rewrite.c>
