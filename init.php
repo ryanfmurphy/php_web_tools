@@ -1,6 +1,8 @@
 <?php
 include('or_config.php');
 
+chdir(__DIR__);
+
 # util files
 foreach (glob('util/*.php') as $util_file) {
     require_once($util_file);
