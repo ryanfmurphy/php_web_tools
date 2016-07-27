@@ -59,11 +59,19 @@
     <tr data-row="<?= $rowN ?>">
 <?php
                             { # edit-row link
+                                { # get id field - #todo use the fn we probably have for this / create one
+                                    if ($id_mode == 'id_only') {
+                                        $primary_key_field = 'id';
+                                    }
+                                    else {
+                                        $primary_key_field = $inferred_table.'_id';
+                                    }
+                                }
                                 if ($add_edit_link) {
                                     $primary_key = $row[$primary_key_field];
 ?>
         <td>
-            <a  href="/dash/edit.php?table=<?= $inferred_table ?>&primary_key=<?= $primary_key ?>"
+            <a  href="<?= $dash_path ?>?edit=1&table=<?= $inferred_table ?>&primary_key=<?= $primary_key ?>"
                 target="_blank"
             >
                 edit
