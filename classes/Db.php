@@ -121,9 +121,16 @@ $msg . "
             values ($varValList);
         ";
 
-        $db = Db::conn();
-        $result = $db->query($sql);
-        return $result;
+        if (isset($vars['show_sql_query'])
+            && $vars['show_sql_query']
+        ) {
+            return $sql;
+        }
+        else {
+            $db = Db::conn();
+            $result = $db->query($sql);
+            return $result;
+        }
     }
 
     private static function viewQuery($sql) {
