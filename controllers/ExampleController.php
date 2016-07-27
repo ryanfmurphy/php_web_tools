@@ -153,7 +153,6 @@ class ExampleController extends Controller {
 
                 case "action_create_$table":
                     return json_encode(
-                        #Model::create($vars, $ClassName)
                         Db::insertRow($table, $vars)
                     );
                     break;

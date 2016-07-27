@@ -108,23 +108,38 @@ $msg . "
     # and allow the MetaController to function without Model Objects
 
     public static function insertRow($tableName, $rowVars) {
-        #todo work around this limitation
+        #todo work around limitation of needing at least 1 kv pair
         # e.g. postgres will do:
         #   insert into my_table default values
         if (!count($rowVars)) {
-            trigger_error("Db::insertRow needs at least one key-value pair", E_USER_ERROR);
+            trigger_error(
+                "Db::insertRow needs at least one key-value pair",
+                E_USER_ERROR
+            );
         }
-        list($varNameList, $varValList) = Db::sqlFieldsAndValsFromArray($rowVars);
+
+        { # detect show_sql_query (filter out that var too)
+            if (isset($rowVars['show_sql_query'])
+                && $rowVars['show_sql_query']
+            ) {
+                $showSqlQuery = true;
+                unset($rowVars['show_sql_query']);
+            }
+            else {
+                $showSqlQuery = false;
+            }
+        }
+
+        list($varNameList, $varValList)
+            = Db::sqlFieldsAndValsFromArray($rowVars);
 
         $sql = "
             insert into $tableName ($varNameList)
             values ($varValList);
         ";
 
-        if (isset($vars['show_sql_query'])
-            && $vars['show_sql_query']
-        ) {
-            return $sql;
+        if ($showSqlQuery) {
+            return array('sql'=>$sql);
         }
         else {
             $db = Db::conn();
