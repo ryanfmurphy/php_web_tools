@@ -3,13 +3,17 @@
             # factored into a function because
             # the <th>'s are repeated every so many rows
             # so it's easier to see what column you're on
-            function headerRow(&$rows, $rowN) {
-                $firstRow = current($rows);
+            function headerRow(&$rows, $rowN, $add_edit_link) {
+                $currentRow = current($rows);
 ?>
 	<tr data-row="<?= $rowN ?>">
+<?php
+                if ($add_edit_link) {
+?>
         <th></th>
 <?php
-                foreach ($firstRow as $fieldName => $val) {
+                }
+                foreach ($currentRow as $fieldName => $val) {
 ?>
 		<th class="popr" data-id="1">
 			<?= $fieldName ?>
@@ -34,10 +38,19 @@
                                       ? $requestVars['header_every']
                                       : 15;
 
+                    { # primary key stuff for edit_link
+                        $primary_key_field = 'id';
+                        $current_row = current($rows);
+                        $has_primary_key = (isset($current_row[$primary_key_field])
+                                                ? true : false);
+                        $add_edit_link = ($has_primary_key
+                                            ? true : false);
+                    }
+
                     $rowN = 0;
                     foreach ($rows as $row) {
                         if ($rowN % $headerEvery == 0) {
-                            headerRow($rows, $rowN);
+                            headerRow($rows, $rowN, $add_edit_link);
                             $rowN++;
                         }
 
@@ -45,8 +58,7 @@
 ?>
     <tr data-row="<?= $rowN ?>">
 <?php
-                            {
-                                # edit-row link
+                            { # edit-row link
                                 { # get id field - #todo use the fn we probably have for this / create one
                                     if ($id_mode == 'id_only') {
                                         $primary_key_field = 'id';
@@ -55,7 +67,8 @@
                                         $primary_key_field = $inferred_table.'_id';
                                     }
                                 }
-                                $primary_key = $row[$primary_key_field];
+                                if ($add_edit_link) {
+                                    $primary_key = $row[$primary_key_field];
 ?>
         <td>
             <a  href="<?= $dash_path ?>?edit=1&table=<?= $inferred_table ?>&primary_key=<?= $primary_key ?>"
@@ -65,6 +78,7 @@
             </a>
         </td>
 <?php
+                                }
                             }
 
                             { # loop thru fields and make <td>s
