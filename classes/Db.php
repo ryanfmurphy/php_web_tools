@@ -148,6 +148,64 @@ $msg . "
         }
     }
 
+    public static function updateRow($tableName, $rowVars) {
+        if (isset($rowVars['where_clauses'])) {
+            $whereClauses = $rowVars['where_clauses'];
+        }
+        else {
+            die("can't do updateRow without where_clauses");
+        }
+    }
+
+    # save changes of existing obj/row to db
+    public function buildUpdateSql($table_name, $setKeyVals, $whereClauses) {
+        $objVars = get_object_vars($this);
+        list($varNameList, $varValList)
+            = Db::sqlFieldsAndValsFromArray($objVars);
+
+        { # build sql
+            $sql = "
+                update $table_name set
+            ";
+
+            $comma = false;
+            foreach ($setKeyVals as $key => $val) {
+                if ($comma) $sql .= ",";
+                $val = Db::sqlLiteral($val);
+                $sql .= "\n$key = $val";
+                $comma = true;
+            }
+            $id_name_scheme = 'table_id'; #todo
+            $idField = self::getIdFieldName($table_name, $id_name_scheme);
+            $id = $this->getId();
+            $sql .= "
+                where $idField = $id
+            ";
+            $sql .= ';';
+        }
+
+        $db = Db::conn();
+        $result = $db->query($sql);
+
+        if ($result) {
+            return $this;
+        }
+        else {
+            Db::error("Model::create could not create object.", $sql);
+        }
+
+    }
+
+    private static function getIdFieldName($table_name=null, $id_type) {
+        switch ($id_type) {
+            #return 'iid';
+            case 'id_only':
+                return 'id';
+            case 'table_id':
+                return $table_name . '_id';
+        }
+    }
+
     private static function viewQuery($sql) {
         $vars = requestVars();
         $query_string = http_build_query(array(
@@ -163,21 +221,42 @@ $msg . "
         return Db::viewQuery($sql);
     }
 
-    public static function buildSelectSql($table_name, $vars) {
-        $sql = "
-            select * from $table_name
-        ";
+    public static function buildWhereClause($wheres) {
+        $sql = '';
 
         # add where clauses
-        $whereOrAnd = 'where';
-        foreach ($vars as $key => $val) {
+        $where_or_and = 'where';
+        foreach ($wheres as $key => $val) {
             $val = Db::sqlLiteral($val);
-            $sql .= "\n$whereOrAnd $key = $val";
-            $whereOrAnd = 'and';
+            $sql .= "\n$where_or_and $key = $val";
+            $where_or_and = 'and';
         }
 
+        return $sql;
+    }
+
+    public static function buildSelectSql($table_name, $wheres) {
+        $sql = "select * from $table_name";
+        $sql .= self::buildWhereClauses($wheres);
         $sql .= ";";
         return $sql;
+    }
+
+    public static function get($table_name, $wheres) {
+        $sql = builtSelectSql($table_name, $wheres);
+        return query_fetch($sql);
+    }
+
+    private static function query_fetch($sql, $only1=false) {
+        $rows = self::sql($sql);
+        if ($only1) {
+            return (count($rows)
+                        ? $rows[0]
+                        : null);
+        }
+        else {
+            return $rows;
+        }
     }
 
 }

@@ -120,6 +120,7 @@ class Model {
         }
     }
 
+    #todo may not need this - core logic is in Db class now
     # save changes of existing obj/row to db
     public function updateExisting($ClassName=null) {
         $table_name = self::table_name($ClassName);
@@ -245,7 +246,10 @@ class Model {
         }
     }
 
-    private static function query_fetch($sql, $ClassName=null, $only1=false) {
+    # -> Db
+    private static function query_fetch(
+        $sql, $ClassName=null, $only1=false
+    ) {
         $db = Db::conn();
         $result = $db->query($sql);
         if ($only1) {
