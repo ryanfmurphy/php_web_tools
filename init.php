@@ -1,9 +1,8 @@
 <?php
 include('or_config.php');
 
-# util
+# util files
 foreach (glob('util/*.php') as $util_file) {
-    # require_once will avoid circularly include this file
     require_once($util_file);
 }
 
@@ -40,3 +39,8 @@ foreach (glob('models/*.php') as $model_file) {
     require_once($model_file);
 }
 
+
+# postgres-specific
+if (isset($search_path)) {
+    DbUtil::setDbSearchPath($search_path);
+}
