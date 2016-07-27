@@ -230,8 +230,8 @@ $msg . "
     }
 
     public static function get($table_name, $wheres) {
-        $sql = builtSelectSql($table_name, $wheres);
-        return queryFetch($sql);
+        $sql = self::buildSelectSql($table_name, $wheres);
+        return self::queryFetch($sql);
     }
 
     private static function queryFetch($sql, $only1=false) {
