@@ -1,5 +1,5 @@
 <?php
-include('or-config.php');
+include('or_config.php');
 
 # util
 foreach (glob('util/*.php') as $util_file) {
