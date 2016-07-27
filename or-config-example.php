@@ -1,6 +1,6 @@
 <?php
 { # orm_router specific vars
-    define('URI_PREFIX', '/ormrouter');
+    define('URI_PREFIX', '/orm_router');
     $ControllerClass = 'ExampleController';
 }
 
