@@ -159,7 +159,8 @@ class ExampleController extends Controller {
 
                 case "action_update_$table":
                     return json_encode(
-                        Model::update($vars, $ClassName)
+                        #Model::update($vars, $ClassName)
+                        Db::updateRow($table, $vars)
                     );
 
                 #todo

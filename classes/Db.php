@@ -148,9 +148,12 @@ $msg . "
         }
     }
 
-    public static function updateRow($tableName, $rowVars) {
+    public static function updateRow($table_name, $rowVars) {
         if (isset($rowVars['where_clauses'])) {
             $whereClauses = $rowVars['where_clauses'];
+            unset($rowVars['where_clauses']);
+            $sql = self::buildUpdateSql($table_name, $rowVars, $whereClauses);
+            return self::queryFetch($sql);
         }
         else {
             die("can't do updateRow without where_clauses");
@@ -158,15 +161,10 @@ $msg . "
     }
 
     # save changes of existing obj/row to db
-    public function buildUpdateSql($table_name, $setKeyVals, $whereClauses) {
-        $objVars = get_object_vars($this);
-        list($varNameList, $varValList)
-            = Db::sqlFieldsAndValsFromArray($objVars);
+    public static function buildUpdateSql($table_name, $setKeyVals, $whereClauses) {
 
         { # build sql
-            $sql = "
-                update $table_name set
-            ";
+            $sql = "update $table_name set ";
 
             $comma = false;
             foreach ($setKeyVals as $key => $val) {
@@ -177,23 +175,12 @@ $msg . "
             }
             $id_name_scheme = 'table_id'; #todo
             $idField = self::getIdFieldName($table_name, $id_name_scheme);
-            $id = $this->getId();
-            $sql .= "
-                where $idField = $id
-            ";
+
+            $sql .= self::buildWhereClause($whereClauses);
             $sql .= ';';
         }
 
-        $db = Db::conn();
-        $result = $db->query($sql);
-
-        if ($result) {
-            return $this;
-        }
-        else {
-            Db::error("Model::create could not create object.", $sql);
-        }
-
+        return $sql;
     }
 
     private static function getIdFieldName($table_name=null, $id_type) {
@@ -229,7 +216,7 @@ $msg . "
         foreach ($wheres as $key => $val) {
             $val = Db::sqlLiteral($val);
             $sql .= "\n$where_or_and $key = $val";
-            $where_or_and = 'and';
+            $where_or_and = '    and';
         }
 
         return $sql;
@@ -237,17 +224,17 @@ $msg . "
 
     public static function buildSelectSql($table_name, $wheres) {
         $sql = "select * from $table_name";
-        $sql .= self::buildWhereClauses($wheres);
+        $sql .= self::buildWhereClause($wheres);
         $sql .= ";";
         return $sql;
     }
 
     public static function get($table_name, $wheres) {
         $sql = builtSelectSql($table_name, $wheres);
-        return query_fetch($sql);
+        return queryFetch($sql);
     }
 
-    private static function query_fetch($sql, $only1=false) {
+    private static function queryFetch($sql, $only1=false) {
         $rows = self::sql($sql);
         if ($only1) {
             return (count($rows)
