@@ -39,7 +39,14 @@
                                       : 15;
 
                     { # primary key stuff for edit_link
-                        $primary_key_field = 'id';
+                        { # get id field - #todo use the fn we probably have for this / create one
+                            if ($id_mode == 'id_only') {
+                                $primary_key_field = 'id';
+                            }
+                            else {
+                                $primary_key_field = $inferred_table.'_id';
+                            }
+                        }
                         $current_row = current($rows);
                         $has_primary_key = (isset($current_row[$primary_key_field])
                                                 ? true : false);
@@ -59,14 +66,6 @@
     <tr data-row="<?= $rowN ?>">
 <?php
                             { # edit-row link
-                                { # get id field - #todo use the fn we probably have for this / create one
-                                    if ($id_mode == 'id_only') {
-                                        $primary_key_field = 'id';
-                                    }
-                                    else {
-                                        $primary_key_field = $inferred_table.'_id';
-                                    }
-                                }
                                 if ($add_edit_link) {
                                     $primary_key = $row[$primary_key_field];
 ?>
