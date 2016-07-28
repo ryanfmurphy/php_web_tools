@@ -1,5 +1,7 @@
 # PHP Web Tools
 
+This project is in Alpha!  Bear with us.  :)
+
 PHP Web Tools gives you a modular, powerful foundation for building a website in PHP.  It is a coalescence of 3 sub-projects:
 
 * PHP ORM/Router
