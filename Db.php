@@ -4,11 +4,10 @@ class Db {
 
     public static function connectToDb() {
         global $db_type, $db_host, $db_name, $db_user, $db_password;
+        #todo will this global work in all cases?
         $db = $GLOBALS['db'] = new PDO(
             "$db_type:host=$db_host;dbname=$db_name",
             $db_user, $db_password
-            #DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME,
-            #DB_USER, DB_PASSWORD
         );
         return $db;
     }
@@ -29,7 +28,7 @@ class Db {
         }
     }
 
-    public static function error($msg, $sql) {
+    public static function error($msg=null, $sql=null) {
         $db = Db::conn();
         trigger_error(
 $msg . "
@@ -54,9 +53,8 @@ $msg . "
     }
 
     public static function sqlFieldsAndValsFromArray($vars) {
-        $keys = array_keys($vars);
-
         { # key list
+            $keys = array_keys($vars);
             $varNameList = implode(', ', $keys);
         }
 
@@ -66,9 +64,9 @@ $msg . "
                 $val = $vars[$key];
                 if (is_array($val) || is_object($val)) {
                     trigger_error(
-    "complex object / array passed to sqlFieldsAndValsFromArray:
-        key = $key,
-        val = ".print_r($val,1)
+"complex object / array passed to sqlFieldsAndValsFromArray:
+    key = $key,
+    val = ".print_r($val,1)
                     );
                 }
                 $varValLiterals[] = Db::sqlLiteral($val);
@@ -83,7 +81,7 @@ $msg . "
         #todo this is just postgres, return null for mysql?
         return $table.'_'.$field.'_seq';
     }
-    
+
     public static function sql($query) {
         $db = Db::conn();
         $result = $db->query($query);
