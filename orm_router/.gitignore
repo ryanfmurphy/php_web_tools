@@ -1,0 +1,17 @@
+/or_config.php
+/or_config.php.bak
+/ormrouter
+/models/*
+/controllers/*
+/*.sql
+/classes/PipeDriveAPI.php
+/classes/StripeAPI.php
+/email-example.php
+/email_templates/
+/html
+/scripts
+/util/custom_includes.php
+/log
+/files
+/sql
+*.swp
