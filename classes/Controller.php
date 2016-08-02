@@ -12,7 +12,7 @@ class Controller {
         }
 
 		if (preg_match(
-                "#^$uriPrefix/([A-Za-z0-9_]+)(.*)#",
+                "#^$uriPrefix/([A-Za-z0-9_.]+)(.*)#",
                 $uri, $matches)
         ) {
 			$route = $matches[1];
@@ -37,6 +37,9 @@ class Controller {
 	public static function do_route($route) {
 		# init
 		$class = get_called_class();
+
+        # handle dots/extensions in controller action function names this way
+        $route = str_replace('.', '_DOT_', $route);
 
 		# find route
 		$method = "action_$route";
