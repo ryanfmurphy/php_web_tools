@@ -2,7 +2,7 @@
 class MainController extends Controller {
 
     public static function action_db_viewer() {
-        require_once('db_viewer/index.php');
+        return DbViewerController::process_nested_route();
     }
 
     public static function action_index() {
