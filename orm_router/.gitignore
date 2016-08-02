@@ -2,7 +2,6 @@
 /or_config.php.bak
 /ormrouter
 /models/*
-/controllers/*
 /*.sql
 /classes/PipeDriveAPI.php
 /classes/StripeAPI.php
