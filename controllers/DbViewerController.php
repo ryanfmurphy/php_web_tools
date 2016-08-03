@@ -17,6 +17,11 @@ class DbViewerController extends Controller {
         require_once('db_viewer/style.css.php');
     }
 
+    public static function action_popr() {
+        return PoprController::process_nested_route();
+    }
+
+
     /*
     public static function process_route($uri=null, $uriPrefix = URI_PREFIX) {
         $ControllerClass = get_called_class();
