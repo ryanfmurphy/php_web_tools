@@ -1,5 +1,8 @@
 <?php
 include('or_config.php');
+if (file_exists('db_config.php')) {
+    include('db_config.php');
+}
 
 chdir(__DIR__);
 
