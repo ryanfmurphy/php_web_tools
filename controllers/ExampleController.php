@@ -112,7 +112,7 @@ class ExampleController extends Controller {
     public static function __callStatic($method, $args) {
         $matchesActionPattern = preg_match("/^
             action
-            _(?<action>get|get1|view|create|update)
+            _(?<action>get|get1|view|create|update|delete)
             _(?<table>\w+)
         $/x", $method, $matches);
 
@@ -163,11 +163,10 @@ class ExampleController extends Controller {
                         Db::updateRow($table, $vars)
                     );
 
-                #todo
-                #case "action_delete_$table":
-                #    return json_encode(
-                #        Model::delete($vars, $ClassName)
-                #    );
+                case "action_delete_$table":
+                    return json_encode(
+                        Db::deleteRow($table, $vars)
+                    );
 
                 default:
                     return self::action_404();
