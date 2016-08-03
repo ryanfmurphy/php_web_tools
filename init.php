@@ -8,6 +8,8 @@
         $fields2omit_global = array();
         $multipleTablesFoundInDifferentSchemas = false;
         $search_path = null;
+        $only_include_these_fields = null;
+
         if (!isset($edit)) {
             $edit = null;
         }
@@ -47,5 +49,22 @@
                 $orm_router_path = "/orm_router";
             }
         }
+
+        { # minimal
+            if (isset($_GET['minimal'])) {
+                $minimal = $_GET['minimal'];
+                if ($minimal || $minimal==='') {
+                    $only_include_these_fields = array(
+                        "name",
+                        "txt",
+                        "what",
+                    );
+                    $tables2ignore_only_include_these_fields = array(
+                        "effect",
+                    );
+                }
+            }
+        }
+
     }
 
