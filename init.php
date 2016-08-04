@@ -4,7 +4,10 @@ if (file_exists('db_config.php')) {
     include('db_config.php');
 }
 
-chdir(__DIR__);
+if (!isset($trunk)) {
+    $trunk = __DIR__;
+}
+chdir($trunk);
 
 # util files
 foreach (glob('util/*.php') as $util_file) {
@@ -28,6 +31,7 @@ if (file_exists('util/custom_includes.php')) {
         $ControllerClass = null;
     }
     foreach (glob('controllers/*.php') as $controller_file) {
+        echo $controller_file.'<br>';
         if (!$ControllerClass) {
             $ControllerClass = basename($controller_file, '.php');
         }
