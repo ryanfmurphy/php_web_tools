@@ -431,9 +431,15 @@ if (!class_exists('DbUtil')) {
 
         # get comma-sep search_path as array of schemas
         public static function schemas_in_path($search_path) {
+            $search_path = trim($search_path);
             $search_path_no_spaces = str_replace(' ', '', $search_path);
             $schemas_in_path = explode(',', $search_path_no_spaces);
-            return $schemas_in_path;
+            if (count($schemas_in_path) == 1 && $schemas_in_path[0] == '') {
+                return null;
+            }
+            else {
+                return $schemas_in_path;
+            }
         }
 
 
@@ -488,7 +494,7 @@ if (!class_exists('DbUtil')) {
             else {
                 self::log("
 infer_limit_from_query: query didn't match regex.
-    query = '$query'
+    query = $$$query$$
     regex = '$regex'
 ");
             }
@@ -525,9 +531,7 @@ infer_limit_from_query: query didn't match regex.
             );
         }
 
-        public static function link_to_query_w_limit(
-            $query, $limit=null, $offset=null
-        ) {
+        public static function link_to_query_w_limit($query, $limit=null, $offset=null) {
             global $db_type;
             $maybeLimit = ($limit !== null
                                 ? " limit $limit"
