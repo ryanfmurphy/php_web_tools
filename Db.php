@@ -173,13 +173,6 @@ if (!class_exists('Db')) {
             }
         }
 
-        public static function buildSelectSql($table_name, $wheres) {
-            $sql = "select * from $table_name";
-            $sql .= self::buildWhereClause($wheres);
-            $sql .= ";";
-            return $sql;
-        }
-
         # save changes of existing obj/row to db
         public static function buildUpdateSql($table_name, $setKeyVals, $whereClauses) {
 
@@ -250,6 +243,13 @@ if (!class_exists('Db')) {
                 $where_or_and = '    and';
             }
 
+            return $sql;
+        }
+
+        public static function buildSelectSql($table_name, $wheres) {
+            $sql = "select * from $table_name";
+            $sql .= self::buildWhereClause($wheres);
+            $sql .= ";";
             return $sql;
         }
 
