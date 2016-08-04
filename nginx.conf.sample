@@ -1,0 +1,60 @@
+# example nginx.conf for php_web_tools
+# get all files within the "php_web_tools" directory
+# to route to index.php
+
+#user  nobody;
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        location ~ \.php$ {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            #fastcgi_param  QUERY_STRING $query_string;
+            include        fastcgi_params;
+        }
+
+        location /php_web_tools {
+            #todo don't try files, just aways route
+            #try_files $uri $uri/ /orm_router/index.php;
+            #try_files $uri /php_web_tools/index.php$is_args$args;
+            #try_files /php_web_tools/index.php$is_args$args;
+            rewrite ^ /php_web_tools/index.php$is_args$args;
+        }
+    }
+
+
+}
