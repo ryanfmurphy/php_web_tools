@@ -31,7 +31,6 @@ if (file_exists('util/custom_includes.php')) {
         $ControllerClass = null;
     }
     foreach (glob('controllers/*.php') as $controller_file) {
-        echo $controller_file.'<br>';
         if (!$ControllerClass) {
             $ControllerClass = basename($controller_file, '.php');
         }
