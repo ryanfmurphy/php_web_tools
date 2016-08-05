@@ -1,17 +1,18 @@
 <?php
 class MainController extends Controller {
 
+    # /php_web_tools/db_viewer/*
     public static function action_db_viewer() {
         return DbViewerController::process_nested_route();
     }
 
     public static function action_index() {
         $getVars = $_GET;
-        require_once('views/example/index.html.php');
+        include('views/example/index.html.php');
     }
 
     public static function action_other_view() {
-        require_once('views/example/other_view.html.php');
+        include('views/example/other_view.html.php');
     }
 
 

@@ -26,12 +26,14 @@ if (file_exists('util/custom_includes.php')) {
 }
 
 
-{ # controllers
+{ # include all controllers, and choose one as the main $ControllerClass
     if (!isset($ControllerClass)) {
         $ControllerClass = null;
     }
     foreach (glob('controllers/*.php') as $controller_file) {
         if (!$ControllerClass) {
+            # if not specified, choose the first controller file you find
+            # as the main $ControllerClass
             $ControllerClass = basename($controller_file, '.php');
         }
         require_once($controller_file);
@@ -48,7 +50,8 @@ foreach (glob('models/*.php') as $model_file) {
 }
 
 
-# postgres-specific
+# postgres-specific: set search path
 if (isset($search_path)) {
     DbUtil::setDbSearchPath($search_path);
 }
+
